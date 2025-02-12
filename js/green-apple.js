@@ -37,10 +37,10 @@ controls.dampingFactor = 0.05;
 const loadTextures = () => {
     const textureLoader = new THREE.TextureLoader();
     const texturePromises = [
-        textureLoader.loadAsync("img/green-apple3d/apple02/apple02_baseColor.png"),
-        textureLoader.loadAsync("img/green-apple3d/apple02/apple02_normal.png"),
-        textureLoader.loadAsync("img/green-apple3d/apple02/apple02_metallic.png"),
-        textureLoader.loadAsync("img/green-apple3d/apple02/apple02_roughness.png")
+        textureLoader.loadAsync("./img/green-apple3d/apple02/apple02_baseColor.png"),
+        textureLoader.loadAsync("./img/green-apple3d/apple02/apple02_normal.png"),
+        textureLoader.loadAsync("./img/green-apple3d/apple02/apple02_metallic.png"),
+        textureLoader.loadAsync("./img/green-apple3d/apple02/apple02_roughness.png")
     ];
 
     return Promise.all(texturePromises);
@@ -67,7 +67,7 @@ async function loadModel() {
         // OBJ 모델 로드
         const objLoader = new OBJLoader();
         objLoader.load(
-            "img/green-apple3d/apple02.obj",
+            "./img/green-apple3d/apple02.obj",
             function (object) {
                 object.traverse(function (child) {
                     if (child instanceof THREE.Mesh) {
