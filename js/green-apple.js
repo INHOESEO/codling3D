@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { OrbitControls } from './three/addons/controls/OrbitControls.js';
-import { OBJLoader } from './three/addons/loaders/OBJLoader.js';
-import { MTLLoader } from './three/addons/loaders/MTLLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 
 // Scene 설정
 const scene = new THREE.Scene();
