@@ -32,15 +32,18 @@ scene.add(directionalLight);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
+const basePath = window.location.pathname.includes('github.io') 
+    ? '/convil-info' 
+    : '';
 
 // 텍스처와 머터리얼 생성
 const loadTextures = () => {
     const textureLoader = new THREE.TextureLoader();
     const texturePromises = [
-        textureLoader.loadAsync("./img/green-apple3d/apple02/apple02_baseColor.png"),
-        textureLoader.loadAsync("./img/green-apple3d/apple02/apple02_normal.png"),
-        textureLoader.loadAsync("./img/green-apple3d/apple02/apple02_metallic.png"),
-        textureLoader.loadAsync("./img/green-apple3d/apple02/apple02_roughness.png")
+        textureLoader.loadAsync(`${basePath}/img/green-apple3d/apple02/apple02_baseColor.png`),
+        textureLoader.loadAsync(`${basePath}/img/green-apple3d/apple02/apple02_normal.png`),
+        textureLoader.loadAsync(`${basePath}/img/green-apple3d/apple02/apple02_metallic.png`),
+        textureLoader.loadAsync(`${basePath}/img/green-apple3d/apple02/apple02_roughness.png`)
     ];
 
     return Promise.all(texturePromises);
@@ -67,7 +70,7 @@ async function loadModel() {
         // OBJ 모델 로드
         const objLoader = new OBJLoader();
         objLoader.load(
-            "./img/green-apple3d/apple02.obj",
+            "/img/green-apple3d/apple02.obj",
             function (object) {
                 object.traverse(function (child) {
                     if (child instanceof THREE.Mesh) {
@@ -102,7 +105,9 @@ async function loadModel() {
         );
     } catch (error) {
         console.error('리소스 로딩 에러:', error);
-        document.getElementById("loading").textContent = '로딩 실패';
+        console.log('현재 경로:', window.location.pathname);
+        console.log('시도한 파일 경로:', basePath + '/img/green-apple3d/apple02.obj');
+        document.getElementById("loading").textContent = '로딩 실패: ' + error.message;
     }
 }
 
