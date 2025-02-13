@@ -35,13 +35,14 @@ controls.dampingFactor = 0.05;
 
 const getBasePath = () => {
     if (window.location.hostname.includes('github.io')) {
-        // window.location.pathname에서 첫 번째 경로 세그먼트를 가져옴
+        // 저장소 이름을 소문자로 강제 변환
         const pathSegments = window.location.pathname.split('/');
-        const repoName = pathSegments[1]; // 'codling3d'
+        const repoName = pathSegments[1].toLowerCase(); // 'codling3d'로 강제 변환
         return `/${repoName}`;
     }
     return '.';
 };
+
 
 const basePath = getBasePath();
 console.log('Current basePath:', basePath); // 디버깅용
@@ -49,6 +50,8 @@ console.log('Current basePath:', basePath); // 디버깅용
 // 텍스처와 머터리얼 생성
 const loadTextures = () => {
     const textureLoader = new THREE.TextureLoader();
+    console.log('Loading textures from:', basePath); // 디버깅용
+    
     const texturePromises = [
         textureLoader.loadAsync(`${basePath}/img/green-apple3d/apple02/apple02_baseColor.png`),
         textureLoader.loadAsync(`${basePath}/img/green-apple3d/apple02/apple02_normal.png`),
@@ -112,7 +115,6 @@ async function loadModel() {
         );
     } catch (error) {
         console.error('리소스 로딩 에러:', error);
-        // 더 자세한 디버깅 정보 추가
         console.log('현재 환경:', window.location.hostname);
         console.log('basePath:', basePath);
         console.log('전체 파일 경로:', `${basePath}/img/green-apple3d/apple02.obj`);
