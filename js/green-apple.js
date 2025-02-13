@@ -34,15 +34,17 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 
 const getBasePath = () => {
-    // 깃허브 페이지인 경우 저장소 이름을 포함한 경로 반환
     if (window.location.hostname.includes('github.io')) {
-        return '/codling3d';  // 저장소 이름은 소문자로
+        // window.location.pathname에서 첫 번째 경로 세그먼트를 가져옴
+        const pathSegments = window.location.pathname.split('/');
+        const repoName = pathSegments[1]; // 'codling3d'
+        return `/${repoName}`;
     }
-    // 로컬 환경인 경우 상대 경로 사용
     return '.';
 };
 
 const basePath = getBasePath();
+console.log('Current basePath:', basePath); // 디버깅용
 
 // 텍스처와 머터리얼 생성
 const loadTextures = () => {
@@ -75,7 +77,7 @@ async function loadModel() {
 
         const objLoader = new OBJLoader();
         objLoader.load(
-            `${basePath}/img/green-apple3d/apple02.obj`,  // 여기도 basePath 적용
+            `${basePath}/img/green-apple3d/apple02.obj`,
             function (object) {
                 object.traverse(function (child) {
                     if (child instanceof THREE.Mesh) {
