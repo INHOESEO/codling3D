@@ -33,14 +33,25 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 
+const getBasePath = () => {
+    // 깃허브 페이지인 경우 저장소 이름을 포함한 경로 반환
+    if (window.location.hostname.includes('github.io')) {
+        return '/codling3d';  // 저장소 이름은 소문자로
+    }
+    // 로컬 환경인 경우 상대 경로 사용
+    return '.';
+};
+
+const basePath = getBasePath();
+
 // 텍스처와 머터리얼 생성
 const loadTextures = () => {
     const textureLoader = new THREE.TextureLoader();
     const texturePromises = [
-        textureLoader.loadAsync("./img/green-apple3d/apple02/apple02_baseColor.png"),
-        textureLoader.loadAsync("./img/green-apple3d/apple02/apple02_normal.png"),
-        textureLoader.loadAsync("./img/green-apple3d/apple02/apple02_metallic.png"),
-        textureLoader.loadAsync("./img/green-apple3d/apple02/apple02_roughness.png")
+        textureLoader.loadAsync(`${basePath}/img/green-apple3d/apple02/apple02_baseColor.png`),
+        textureLoader.loadAsync(`${basePath}/img/green-apple3d/apple02/apple02_normal.png`),
+        textureLoader.loadAsync(`${basePath}/img/green-apple3d/apple02/apple02_metallic.png`),
+        textureLoader.loadAsync(`${basePath}/img/green-apple3d/apple02/apple02_roughness.png`)
     ];
 
     return Promise.all(texturePromises);
@@ -51,10 +62,8 @@ async function loadModel() {
     try {
         document.getElementById("loading").style.display = "block";
         
-        // 먼저 모든 텍스처를 로드
         const [baseColorMap, normalMap, metallicMap, roughnessMap] = await loadTextures();
         
-        // 텍스처가 모두 로드된 후 재질 생성
         const material = new THREE.MeshStandardMaterial({
             map: baseColorMap,
             normalMap: normalMap,
@@ -64,10 +73,9 @@ async function loadModel() {
             roughness: 0.5
         });
 
-        // OBJ 모델 로드
         const objLoader = new OBJLoader();
         objLoader.load(
-            "./img/green-apple3d/apple02.obj",
+            `${basePath}/img/green-apple3d/apple02.obj`,  // 여기도 basePath 적용
             function (object) {
                 object.traverse(function (child) {
                     if (child instanceof THREE.Mesh) {
@@ -102,6 +110,10 @@ async function loadModel() {
         );
     } catch (error) {
         console.error('리소스 로딩 에러:', error);
+        // 더 자세한 디버깅 정보 추가
+        console.log('현재 환경:', window.location.hostname);
+        console.log('basePath:', basePath);
+        console.log('전체 파일 경로:', `${basePath}/img/green-apple3d/apple02.obj`);
         document.getElementById("loading").textContent = '로딩 실패';
     }
 }
