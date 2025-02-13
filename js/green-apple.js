@@ -34,8 +34,8 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 
 // basePath 설정
-const basePath = window.location.pathname.includes('github.io') 
-    ? '/codling3D' // '/convil-info'에서 '/codling3D'로 변경
+const basePath = window.location.pathname.startsWith('/codling3D') 
+    ? '/codling3D'
     : '';
 
 // basePath 설정 바로 후에 추가
@@ -47,12 +47,23 @@ console.log('Full model path:', `${basePath}/img/green-apple3d/apple02.obj`);
 // 텍스처와 머터리얼 생성
 const loadTextures = () => {
     const textureLoader = new THREE.TextureLoader();
+    console.log('Loading textures from base path:', basePath); // 디버깅용
+
     const texturePromises = [
         textureLoader.loadAsync(`${basePath}/img/green-apple3d/apple02/apple02_baseColor.png`),
         textureLoader.loadAsync(`${basePath}/img/green-apple3d/apple02/apple02_normal.png`),
         textureLoader.loadAsync(`${basePath}/img/green-apple3d/apple02/apple02_metallic.png`),
         textureLoader.loadAsync(`${basePath}/img/green-apple3d/apple02/apple02_roughness.png`)
     ];
+
+    // 각 텍스처의 전체 URL 출력 (디버깅용)
+    texturePromises.forEach(promise => {
+        promise.then(texture => {
+            console.log('Successfully loaded texture:', texture.source.data.src);
+        }).catch(error => {
+            console.error('Failed to load texture:', error);
+        });
+    });
 
     return Promise.all(texturePromises);
 };
@@ -78,7 +89,7 @@ async function loadModel() {
         // OBJ 모델 로드
         const objLoader = new OBJLoader();
         objLoader.load(
-            `${basePath}/img/green-apple3d/apple02.obj`,  // 여기도 basePath 추가
+            `${basePath}/img/green-apple3d/apple02.obj`,
             function (object) {
                 object.traverse(function (child) {
                     if (child instanceof THREE.Mesh) {
@@ -102,12 +113,13 @@ async function loadModel() {
             function (xhr) {
                 if (xhr.lengthComputable) {
                     const percentComplete = xhr.loaded / xhr.total * 100;
+                    console.log('Loading progress:', percentComplete + '%'); // 디버깅용
                     document.getElementById("loading").textContent = 
                         '로딩 중... ' + Math.round(percentComplete) + '%';
                 }
             },
             function (error) {
-                console.error('모델 로딩 에러:', error);
+                console.error('Model loading error:', error); // 더 자세한 에러 로깅
                 document.getElementById("loading").textContent = '로딩 실패';
             }
         );
