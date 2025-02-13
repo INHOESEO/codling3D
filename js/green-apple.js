@@ -32,8 +32,10 @@ scene.add(directionalLight);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
+
+// basePath 설정
 const basePath = window.location.pathname.includes('github.io') 
-    ? '/convil-info' 
+    ? '/codling3D' // '/convil-info'에서 '/codling3D'로 변경
     : '';
 
 // 텍스처와 머터리얼 생성
@@ -70,7 +72,7 @@ async function loadModel() {
         // OBJ 모델 로드
         const objLoader = new OBJLoader();
         objLoader.load(
-            "/img/green-apple3d/apple02.obj",
+            `${basePath}/img/green-apple3d/apple02.obj`, // basePath 추가
             function (object) {
                 object.traverse(function (child) {
                     if (child instanceof THREE.Mesh) {
